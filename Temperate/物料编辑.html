@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div class="container-fluid">
+
+	<nav class="navbar  navbar-expand-lg navbar-light bg-light"> <a class="navbar-brand" href="#">顺林后台信息系统</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active"> <a class="nav-link" href="http://chinashunlin.com:8001">回到主页 <span class="sr-only">(current)</span></a> </li>
+      <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 我的事务 </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+
+                {% for item,url in worklist %}
+                    <a class="dropdown-item" href="{{ url }}">{{ item }}</a>
+
+                {% endfor %}
+
+
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">修改密码</a> </div>
+      </li>
+      <li class="nav-item"> <a class="nav-link disabled" href="#">敬请等待</a> </li>
+    </ul>
+
+  </div>
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-text">
+    你已登陆，<strong>{{ username }},{{ groupname }}</strong><a href="http://chinashunlin.com:8001/logout" style="color: blue"> 登出</a>
+	</span>
+
+
+</nav>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span></button>
+</nav>
+
+  <div class="row">
+<div class="col-lg-10 offset-lg-1">
+  <div class="card">
+		  <div class="card-header">
+						<h6 class="card-text">物料登记表</h6>
+					</div>
+					<div class="card-body">
+						<form id="itemForm" method="POST" class="" action="http://chinashunlin.com:8001/itemsave/" enctype="multipart/form-data">
+                            {% csrf_token %}
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="itemID">物料ID</label>
+								<div class="col-lg-6">
+									<input readonly type="text" class="form-control" id="itemID" name="itemID" placeholder="" value="{{ item_d.itemID }}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="staff">申请人</label>
+								<div class="col-lg-6">
+									<input readonly type="text" class="form-control" id="staff" name="staff" placeholder=""value="{{ item_d.proposer }}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="subject">项目</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="subject" name="subject" >
+                                        {% for name in namelist %}
+										<option value="{{ name }}" {% ifequal item_d.subject.subjectshortname name  %} selected {% endifequal %}>{{ name }}</option>
+                                        {% endfor %}
+
+										</select>
+										<lgall>请选择工程项目</lgall>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="classify">物料类别</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="classify" name="classify" >
+                                        {% for sort in sortlist %}
+										<option value ="{{ sort }}"  {% ifequal item_d.sort sort %} selected {% endifequal %}>{{ sort }}</option>
+
+                                        {% endfor %}
+
+
+
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="accountname">收款方</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="accountname" name="accountname" placeholder="请输入收款方" value="{{ item_d.beneficiary_name }}" type="text"/>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="accountstype">收款方账户类型</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="accountstype" name="accountstype">
+										<option value ="公司账户" {% if item_d.beneficiary_acc_t == "公司账户" %} selected {% endif %}>公司账户</option>
+										<option value ="私人账户" {% if item_d.beneficiary_acc_t == "私人账户" %} selected {% endif %}>私人账户</option>
+
+										</select>
+
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="sum">金额</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="sum" name="sum" placeholder="请输入物料金额" required="required" type="number" value="{{ item_d.sum_m }}"/>
+									<div class="invalid-feedback">必须填写物料费用</div>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="detail" class="col-lg-4 col-form-label">详细说明</label>
+								<textarea name="detail" class="form-control col-lg-6 col-xs-10" id="detail" rows="3" placeholder="请填写物料详细说明">{{ item_d.detail }}</textarea>
+							</div>
+
+
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox"  value="1" name="havebill" id="defaultCheck1" {% if item_d.haverbill == 1 %} checked {% endif %}>
+								<label class="form-check-label" for="defaultCheck1">
+									能否提供发票
+								</label>
+							</div>
+
+							<div class="form-group">
+								<label for="image">上传照片</label>
+								<input type="file" class="form-control-file" id="image" name="image">
+							</div>
+                        	{% if item_d.photo %}
+                            <p class="col-lg-2">物料图片:</p>
+                                <img src="/media/{{ item_d.photo }}" alt="图片加载中" class="col-lg-8 img-fluid rounded mx-auto d-block" multiple>
+							{% endif %}
+                            <h1> </h1>
+
+							<div class="form-group row">
+								<div class="col-lg-9 offset-lg-4">
+									<button {% if item_d.statment == "部分转账" or item_d.statment == "待还单" %} disabled {% endif %} type="submit" class="btn btn-primary text-center" name="save" value="save">保存</button>
+								</div>
+							</div>
+                            {% if item_d.statment == "部分转账" or item_d.statment == "待还单" %} <h5 class="text-danger">该物料已部分转账，如需修改请联系管理员</h5>
+
+                            <h4 class="text-danger">注意该物料已转账：{{ apppay }}尚欠：{{ dispay }}</h4>
+                             {% endif %}
+
+
+
+
+
+
+						</form>
+					</div>
+				</div>
+
+{% if item_d.statment == "已保存" or item_d.statment == "部分转账" %}
+{% if groupname == "文员" %}
+    <div class="card">
+		  <div class="card-header">
+						<h6 class="card-text">建立申请</h6>
+					</div>
+					<div class="card-body">
+						<form id="AddApplicationForm" method="POST" class="" action="http://chinashunlin.com:8001/applicationsave/" enctype="multipart/form-data">
+                            {% csrf_token %}
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="A_itemID">物料ID</label>
+								<div class="col-lg-6">
+									<input readonly type="text" class="form-control" id="A_itemID" name="A_itemID" placeholder="" value="{{ item_d.itemID }}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="applicationid">申请ID</label>
+								<div class="col-lg-6">
+									<input readonly  class="form-control" id="applicationid" name="applicationid" placeholder="" value="{{ 申请ID }}" type="text"/>
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="S_account">转出账户</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="S_account" name="S_account" placeholder="输入转出账户"value="">
+								</div>
+							</div>
+
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="S_acc_t">转出账户类型</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="S_acc_t" name="S_acc_t">
+										<option value ="公司账户" >公司账户</option>
+										<option value ="私人账户" >私人账户</option>
+
+										</select>
+
+								</div>
+							</div>
+
+
+
+							<div class="form-group row">
+								<div class="col-lg-9 offset-lg-4">
+									<button type="submit" class="btn btn-info text-center" name="save" value="save">申请</button>
+								</div>
+							</div>
+
+
+
+
+
+
+
+
+						</form>
+					</div>
+				</div>
+{% endif %}
+{% endif %}
+
+
+
+
+
+
+</div>
+		</div>
+</div>
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap-4.0.0.js"></script>
+
+
+
+
+</body>
+</html>

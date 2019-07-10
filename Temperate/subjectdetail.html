@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link href="/static/open-iconic-master/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet" type="text/css">
+
+
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <nav class="navbar  navbar-expand-lg navbar-light bg-light"><a class="navbar-brand" href="#">顺林后台信息系统</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a class="nav-link" href="http://chinashunlin.com:8001">回到主页 <span
+                        class="sr-only">(current)</span></a></li>
+                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1"
+                                                 role="button" data-toggle="dropdown" aria-haspopup="true"
+                                                 aria-expanded="false"> 我的事务 </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+
+                        {% for item,url in worklist %}
+                            <a class="dropdown-item" href="{{ url }}">{{ item }}</a>
+
+                        {% endfor %}
+
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">修改密码</a></div>
+                </li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">敬请等待</a></li>
+            </ul>
+
+        </div>
+        <nav class="navbar navbar-light bg-light">
+  <span class="navbar-text">
+    你已登陆，<strong>{{ username }},{{ groupname }}</strong><a href="http://chinashunlin.com:8001/logout"
+                                                           style="color: blue"> 登出</a>
+	</span>
+
+
+        </nav>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"
+                aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+    </nav>
+
+
+            <div class="card col-lg-8 offset-lg-2">
+                <div class="card-header">
+                    <label class="card-text">工程信息表</label>
+                </div>
+                <div class="card-body">
+						<form name="savesubjectForm" method="POST" class="" action="http://chinashunlin.com:8001/subjectsave/" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input  class="form-control" id="subjectID" name="subjectID"  value="{{ subject_a.subjectID }}" type="text" style="display: none" readonly/>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="subjectname">工程名称</label>
+								<div class="col-lg-6">
+									<input  class="form-control" id="subjectname" name="subjectname" placeholder="工程名称" value="{{ subject_a.subjectname }}" type="text"/>
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="subjectshortname">工程简称</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="subjectshortname" name="subjectshortname" placeholder="输入工程简称" value="{{ subject_a.subjectshortname }}">
+								</div>
+							</div>
+                                 <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="contractnunber">合同编号</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="contractnunber" name="contractnunber" placeholder="合同编号" value="{{ subject_a.contractnunber }}">
+								</div>
+							</div>
+
+                            <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="subjectsum">合同金额</label>
+								<div class="col-lg-6">
+									<input type="number" class="form-control" id="subjectsum" name="subjectsum" placeholder="合同金额" value="{{ subject_a.subjectsum }}" >
+								</div>
+							</div>
+
+                            <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="jia">甲方</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="jia" name="jia" placeholder="甲方" value="{{ subject_a.jia }}">
+								</div>
+							</div>
+
+                            <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="yi">乙方</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="yi" name="yi" placeholder="乙方" value="{{ subject_a.yi }}">
+								</div>
+							</div>
+
+                            <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="subjectmanager">项目管理员</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="subjectmanager" name="subjectmanager" placeholder="项目管理员" value="{{ subject_a.subjectmanager }}">
+								</div>
+							</div>
+
+
+
+                            <div class="row">
+                                <div class="col-lg-6 offset-lg-4">
+                                <div class="col-lg-2 offset-lg-1">
+                                <input class="form-check-input" type="checkbox" value="1" id="lvhua" name="lvhua" {% if subject_a.lvhua == 1  %}checked{% endif %}>
+                                    <label class="form-check-label" for="lvhua">绿化</label>
+                                </div>
+
+                                <div class="col-lg-2 offset-lg-1">
+                              <input class="form-check-input" type="checkbox" value="1" id="yuanjian" name="yuanjian" {% if subject_a.yuanjian == 1  %}checked{% endif %}>
+                              <label class="form-check-label" for="yuanjian">园建</label>
+                                </div>
+
+
+                                <div class="col-lg-2 offset-lg-1">
+                                <input class="form-check-input" type="checkbox" value="1" id="light" name="light" {% if subject_a.light == 1  %}checked{% endif %}>
+                                    <label class="form-check-label" for="light">亮化</label>
+                                </div>
+                                <div class="col-lg-2 offset-lg-1">
+                              <input class="form-check-input" type="checkbox" value="1" id="shuidian" name="shuidian" {% if subject_a.shuidian == 1  %}checked{% endif %}>
+                              <label class="form-check-label" for="shuidian">水电</label>
+                                </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="begintime">进场日期</label>
+								<div class="col-lg-6">
+									<input type="date" class="form-control" id="begintime" name="begintime" placeholder="进场日期" value="{{ subject_a.begintime|date:'Y-m-d' }}">
+								</div>
+							</div>
+
+                            <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="endtime">完工日期</label>
+								<div class="col-lg-6">
+									<input type="date" class="form-control" id="endtime" name="endtime" placeholder="完工日期" value="{{ subject_a.endtime|date:'Y-m-d' }}">
+								</div>
+							</div>
+
+                            <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="percentage">进度评估</label>
+								<div class="col-lg-6">
+									<input type="number" class="form-control" id="percentage" name="percentage" placeholder="进度评估" value="{{ subject_a.percentage }}">
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="statment">工程状态</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="statment" name="statment" >
+										<option value ="未定合同"  {% if subject_a.statment == "未定合同" %} selected {% endif %}>未确认合同</option>
+										<option value ="合同已确认" {% if subject_a.statment == "合同已确认" %} selected {% endif %}>合同已确认</option>
+										<option value ="施工中" {% if subject_a.statment == "施工中" %} selected {% endif %}>施工中</option>
+                                        <option value ="结算中" {% if subject_a.statment == "结算中" %} selected {% endif %}>结算中</option>
+                                        <option value ="已结算完毕" {% if subject_a.statment == "已结算完毕" %} selected {% endif %}>已结算完毕</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                                    <div class="form-group row">
+                                     <label class="col-lg-4 col-form-label" for="subjectnote">项目备注</label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="subjectnote" name="subjectnote"  rows="3">
+                                            {{ subject_a.subjectnote }}
+                                            </textarea>
+                                        </div>
+								        </div>
+
+
+
+							<div class="form-group row">
+
+								<div class="col-auto">
+									<button type="submit" class="btn btn-info text-center" name="save" value="save">保存</button>
+								</div>
+
+							</div>
+
+						</form>
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap-4.0.0.js"></script>
+<script type="text/javascript">
+
+function b_save(){
+    document.saveApplicationForm.action="http://chinashunlin.com:8001/applicationsave/";
+    document.saveApplicationForm.submit();
+}
+function b_reject(){
+    var message = confirm("确认不批准申请？");
+    if (message == true) {
+        document.saveApplicationForm.action = "http://chinashunlin.com:8001/applicationreject/";
+        document.saveApplicationForm.submit();
+    }
+    else {
+    }
+}
+function b_approve(){
+    var message = confirm("确认批准申请？");
+    if (message == true) {
+        document.saveApplicationForm.action = "http://chinashunlin.com:8001/applicationapprove/";
+        document.saveApplicationForm.submit();
+    }
+    else {
+    }
+}
+
+
+</script>
+
+</body>
+</html>

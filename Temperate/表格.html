@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div class="container">
+
+	<nav class="navbar  navbar-expand-lg navbar-light bg-light"> <a class="navbar-brand" href="#">顺林后台信息系统</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active"> <a class="nav-link" href="http://chinashunlin.com:8001">回到主页 <span class="sr-only">(current)</span></a> </li>
+      <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 我的事务 </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+
+                {% for item,url in worklist %}
+                    <a class="dropdown-item" href="{{ url }}">{{ item }}</a>
+
+                {% endfor %}
+
+
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">修改密码</a> </div>
+      </li>
+      <li class="nav-item"> <a class="nav-link disabled" href="#">敬请等待</a> </li>
+    </ul>
+
+  </div>
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-text">
+    你已登陆，<strong>{{ username }},{{ groupname }}</strong><a href="http://chinashunlin.com:8001/logout" style="color: blue"> 登出</a>
+	</span>
+
+
+</nav>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span></button>
+</nav>
+
+  <div class="row">
+<div class="col-lg-8 offset-lg-2">
+  <div class="card">
+		  <div class="card-header">
+						<h6 class="card-text">物料登记表</h6>
+					</div>
+					<div class="card-body">
+						<form id="itemForm" method="POST" class=" " action="/itemsave/" enctype="multipart/form-data">
+                            {% csrf_token %}
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="itemID">物料ID</label>
+								<div class="col-lg-6">
+									<input readonly type="text" class="form-control" id="itemID" name="itemID" placeholder="" value="{{ id }}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="staff">申请人</label>
+								<div class="col-lg-6">
+									<input readonly type="text" class="form-control" id="staff" name="staff" placeholder=""value="{{ 申请人 }}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="subject">项目</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="subject" name="subject" >
+                                        {% for name in namelist %}
+										<option value="{{ name }}">{{ name }}</option>
+
+
+                                        {% endfor %}
+										
+										
+										</select>
+										<lgall>请选择工程项目</lgall>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="classify">物料类别</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="classify" name="classify" >
+                                        {% for sort in sortlist %}
+										<option value ="{{ sort }}">{{ sort }}</option>
+
+										{% endfor %}
+										
+										
+										
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="accountname">收款方</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="accountname" name="accountname" placeholder="请输入收款方" />
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="accountstype">收款方账户类型</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="accountstype" name="accountstype">
+										<option value ="公司账户">公司账户</option>
+										<option value ="私人账户">私人账户</option>
+										
+										</select>
+										
+								</div>
+							</div>
+							
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="sum">金额</label>
+								<div class="col-lg-6">
+									<input type="number" class="form-control" id="sum" name="sum" placeholder="请输入物料金额" required="required"/>
+									<div class="invalid-feedback">必须填写物料费用</div>
+								</div>
+							</div>
+							
+							<div class="form-group row">
+								<label for="detail" class="col-lg-4 col-form-label">详细说明</label>
+								<textarea name="detail" class="form-control col-lg-6 col-xs-10" id="detail" rows="3" placeholder="请填写物料详细说明"></textarea>
+							</div>
+					
+
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox"  value="1" name="havebill" id="defaultCheck1">
+								<label class="form-check-label" for="defaultCheck1">
+									能否提供发票
+								</label>
+							</div>
+
+
+
+
+							<div class="form-group">
+								<label for="image">上传照片</label>
+								<input type="file" class="form-control-file" id="image" name="image" multiple>
+							</div>
+							<p>
+                                <ul class="file-list ">
+                                </ul>
+                            </p>
+
+
+
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							<div class="form-group row">
+								<div class="col-lg-9 offset-lg-4">
+									<button type="submit" class="btn btn-primary" name="save" value="save">保存</button>
+								</div>
+							</div>
+						
+						
+						
+						
+						
+						
+						
+						
+						</form>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap-4.0.0.js"></script>
+<script>
+
+    $(function () {
+        ////////////////////////////////////////////////图片上传//////////////////////////////////////////////
+        //声明变量
+        var $button = $('#upload'),
+            //选择文件按钮
+            $file = $("#image"),
+            //回显的列表
+            $list = $('.file-list'),
+            //选择要上传的所有文件
+            fileList = [];
+        //当前选择上传的文件
+        var curFile;
+        // 选择按钮change事件，实例化fileReader,调它的readAsDataURL并把原生File对象传给它，
+        // 监听它的onload事件，load完读取的结果就在它的result属性里了。它是一个base64格式的，可直接赋值给一个img的src.
+        $file.on('change', function (e) {
+            //上传过图片后再次上传时限值数量
+            var numold = $('li').length;
+            if(numold >= 6){
+                layer.alert('最多上传6张图片');
+                return;
+            }
+            //限制单次批量上传的数量
+            var num = e.target.files.length;
+            var numall = numold + num;
+            if(num >6 ){
+               layer.alert('最多上传6张图片');
+               return;
+            }else if(numall > 6){
+                layer.alert('最多上传6张图片');
+                return;
+            }
+            //原生的文件对象，相当于$file.get(0).files;//files[0]为第一张图片的信息;
+            curFile = this.files;
+            //curFile = $file.get(0).files;
+            //console.log(curFile);
+            //将FileList对象变成数组
+            fileList = fileList.concat(Array.from(curFile));
+            //console.log(fileList);
+            for (var i = 0, len = curFile.length; i < len; i++) {
+                reviewFile(curFile[i])
+            }
+            $('.file-list').fadeIn(2500);
+        })
+
+
+        function reviewFile(file) {
+            //实例化fileReader,
+            var fd = new FileReader();
+            //获取当前选择文件的类型
+            var fileType = file.type;
+            //调它的readAsDataURL并把原生File对象传给它，
+            fd.readAsDataURL(file);//base64
+            //监听它的onload事件，load完读取的结果就在它的result属性里了
+            fd.onload = function () {
+                if (/^image\/[jpeg|png|jpg|gif]/.test(fileType)) {
+                    $list.append('<li style="border:solid red px; margin:5px 5px;" class="file-item"><img src="' + this.result + '" alt="" height="70"><span class="file-del"></span></li>').children(':last').hide().fadeIn(2500);
+                } else {
+                    $list.append('<li class="file-item"><span class="file-name">' + file.name + '</span><span class="file-del"></span></li>')
+                }
+
+            }
+        }
+
+
+    })
+
+
+</script>
+
+
+</body>
+</html>

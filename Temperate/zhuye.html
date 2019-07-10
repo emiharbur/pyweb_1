@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+
+
+<div class="container-fluid">
+
+    	<nav class="navbar  navbar-expand-lg navbar-light bg-light"> <a class="navbar-brand" href="#">顺林后台信息系统</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active"> <a class="nav-link" href="http://chinashunlin.com:8001">回到主页 <span class="sr-only">(current)</span></a> </li>
+      <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 我的事务 </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+
+                {% for item,url in worklist %}
+                    <a class="dropdown-item" href="{{ url }}">{{ item }}</a>
+
+                {% endfor %}
+
+
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">修改密码</a> </div>
+      </li>
+      <li class="nav-item"> <a class="nav-link disabled" href="#">敬请等待</a> </li>
+    </ul>
+
+  </div>
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-text">
+    你已登陆，<strong>{{ username }},{{ groupname }}</strong><a href="http://chinashunlin.com:8001/logout" style="color: blue"> 登出</a>
+	</span>
+
+
+</nav>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span></button>
+</nav>
+
+
+
+<div class="card-group">
+
+    <div class="card text-white">
+        <div class="card-header bg-danger">公司公告</div>
+         <div class="card-body text-dark">
+             <h5 class="card-title">关于顺林后台信息系统公告</h5>
+             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+</div>
+
+    <div class="card ">
+        <div class="card-header bg-info text-white">工作指引</div>
+        <ul class="list-group text-dark">
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Cras justo odio
+    <span class="badge badge-primary badge-pill">14</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Dapibus ac facilisis in
+    <span class="badge badge-primary badge-pill">2</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Morbi leo risus
+    <span class="badge badge-primary badge-pill">1</span>
+  </li>
+</ul>
+
+  </div>
+
+    <div class="card ">
+        <div class="card-header bg-primary text-white">网站指引</div>
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+         采购指引
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+          <p>1、在“我的事务”里选择构建不同的物料单，分绿化工地和非绿化工地。构建物料单时请<strong>认真</strong>填写,千万别在金额中填入英文</p>
+          <p>2、如果能提供发票，请确认你已勾选提供发票的选框。创立申请单时，收款方账号请及具体信息请填写在详细信息中</p>
+          <p>3、当有图片上传时，可多图上传，可以在预览框预览你已选择的图片，如果选择错误请点击“选择文件”按钮<strong>重新选择</strong>，图片将会在点击保存按钮后上传，<strong class="text-danger">请务必等待文件上传页面正常跳转再离开</strong></p>
+          <p>4、你可以在物料单管理处修改自己的物料单，在申请查询中查看请款进度，当物料单提交申请后，你将不能修改该物料单</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         文员指引
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+          <p>1、如果要自己创建物料单，请查看采购引导</p>
+          <p>2、你可以在管理物料单中，管理所有由各申请人提交的物料单，并在该物料单详细信息最下面，创立并提交申请单</p>
+
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+         审核人员指引
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+          <p>1、在申请审核页面，将不能对物料单信息进行修改，如果需要修改请点击物料信息上面的连接，或联系文员修改</p>
+      </div>
+    </div>
+
+</div>
+</div>
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+	
+
+
+
+
+
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap-4.0.0.js"></script>
+</body>
+</html>

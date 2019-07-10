@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登陆</title>
+<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1></h1>
+<h1></h1>
+<h1 align="center">顺林绿化工程有限公司</h1>
+<h3 align="center">后台信息系统</h3>
+<div class="container">
+<div class="row">
+	<div class="text-center col-lg-4 col-md-4 col-sm-4 col-xs-4 offset-lg-4 offset-md-4 offset-sm-4">
+		<strong style="font-size:40px">请登录</strong>
+	</div>
+  </div>
+	
+<div class="row">
+
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 offset-lg-3 offset-md-3 offset-sm-3">
+<form action="/login/" method="POST">
+    {% csrf_token %}
+	  <div class="form-group">
+          <h5 class="text-danger">{{ 错误 }}</h5>
+	    <label for="user1">用户名</label>
+	    <input type="text" name="user" class="form-control" id="user1" placeholder="请输入你的用户名">
+
+	  <div class="form-group">
+	    <label for="Password1">密码</label>
+	    <input type="password" name="password" class="form-control" id="Password" placeholder="请输入密码">
+  </div>
+      </div>
+<!--	  
+	<div class="form-check">
+	    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+	    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+-->
+	  <button style="display:block;margin:0 auto" type="submit" class="btn btn-primary">登陆</button>
+</form>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link href="/static/open-iconic-master/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet" type="text/css">
+
+
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <nav class="navbar  navbar-expand-lg navbar-light bg-light"><a class="navbar-brand" href="#">顺林后台信息系统</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a class="nav-link" href="http://chinashunlin.com:8001">回到主页 <span
+                        class="sr-only">(current)</span></a></li>
+                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1"
+                                                 role="button" data-toggle="dropdown" aria-haspopup="true"
+                                                 aria-expanded="false"> 我的事务 </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+
+                        {% for item,url in worklist %}
+                            <a class="dropdown-item" href="{{ url }}">{{ item }}</a>
+
+                        {% endfor %}
+
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">修改密码</a></div>
+                </li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">敬请等待</a></li>
+            </ul>
+
+        </div>
+        <nav class="navbar navbar-light bg-light">
+  <span class="navbar-text">
+    你已登陆，<strong>{{ username }},{{ groupname }}</strong><a href="http://chinashunlin.com:8001/logout"
+                                                           style="color: blue"> 登出</a>
+	</span>
+
+
+        </nav>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"
+                aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-header">
+                    <label class="card-text">关联物料信息</label>
+                    <label class="text-right"><a
+                            href="http://chinashunlin.com:8001/itemdetail/{{ application_d.itemID.itemID }}"><span
+                            class="oi oi-link-intact " title="person" aria-hidden="true">点击编辑物料表</span></a></label>
+                </div>
+                <div class="card-body">
+                    <form id="itemForm" method="POST" class="" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label class="sr-only" for="itemid">物料ID</label>
+                                <input type="text" class="form-control mb-2" id="itemid" readonly name="itemid"
+                                       value="{{ application_d.itemID.itemID }}">
+                            </div>
+                            <div class="col-auto">
+                                <label class="sr-only" for="staff">申请人</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><span class="oi oi-person" title="person"
+                                                                            aria-hidden="true"></span></div>
+                                    </div>
+                                    <input type="text" class="form-control" id="staff" readonly name="staff"
+                                           value="{{ application_d.itemID.proposer }}">
+                                </div>
+                            </div>
+
+
+                            <div class="col-auto">
+                                <label class="sr-only" for="subject">项目名</label>
+                                <div class="input-group mb-2">
+
+
+                                    <select disabled class="form-control" id="subject" name="subject">
+                                        {% for name in namelist %}
+										    <option  value="{{ name }}" {% ifequal application_d.itemID.subject.subjectshortname name  %} selected {% endifequal %}>{{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-auto">
+                                <label class="sr-only" for="sort">分类</label>
+                                <div class="input-group mb-2">
+
+                                    <select disabled class="form-control" id="sort" name="sort">
+                                        {% for sort in sortlist %}
+                                        <option  value="{{ sort }}" {% ifequal application_d.itemID.sort sort %}selected {% endifequal %}>{{ sort }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+
+                                <label class="sr-only" for="sum_m">金额</label>
+                                <div class="input-group mb-2">
+
+                                    <input type="text" class="form-control" id="sum_m" readonly name="sum_m"
+                                           value="{{ application_d.itemID.sum_m }}">
+
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">元</div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-auto">
+
+                                <label class="sr-only" for="accountname">收款方</label>
+                                <div class="input-group mb-2">
+
+                                    <input type="text" class="form-control" id="accountname" readonly name="accountname"
+                                           value="{{ application_d.itemID.beneficiary_name }}">
+
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-auto">
+                                <label class="sr-only" for="accountstype">收款方账户类型</label>
+                                <div class="input-group mb-2">
+
+                                    <select  disabled class="form-control" id="accountstype" name="accountstype">
+                                        <option value="公司账户" {% if application_d.itemID.beneficiary_acc_t == "公司账户" %} selected {% endif %}>公司账户
+                                        </option>
+                                        <option value="私人账户" {% if application_d.itemID.beneficiary_acc_t == "私人账户" %} selected {% endif %}>私人账户
+                                        </option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <ul class="list-group mb-sm-2">
+
+                                    {% if application_d.itemID.haverbill == 1 %}
+                                        <li class="list-group-item list-group-item-success">可以提供发票</li>
+                                    {% else %}
+                                        <li class="list-group-item list-group-item-danger h-75">不可以提供发票</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+
+                                <area name="detail" id="detail" rows="3">{{ application_d.itemID.detail }}
+
+
+                                </area>
+                            </div>
+
+
+                        </div>
+                    </form>
+
+                    <div>
+                        {% if application_d.itemID.photo %}
+
+                            <img src="/media/{{ application_d.itemID.photo }}" alt="图片加载中"
+                                 class="img-thumbnail col-lg-8 img-fluid rounded mx-auto d-block">
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card ">
+                {% if application_d.itemID.statment == "部分转账" %}
+        <div class="card-header text-white bg-danger">注意</div>
+         <div class="card-body text-danger">
+             <h5 class="card-title">该物料已转账：{{ paysum }}  尚欠：{{ dissum }}</h5>
+
+  </div>
+</div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <label class="card-text">申请信息</label>
+                </div>
+                <div class="card-body">
+						<form name="saveApplicationForm" method="POST" class="" action="http://chinashunlin.com:8001/applicationsave/" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="applicationid">申请ID</label>
+								<div class="col-lg-6">
+									<input readonly  class="form-control" id="applicationid" name="applicationid" placeholder="" value="{{ application_d.applicationID }}" type="text"/>
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="S_pay_name">转出账户</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="S_pay_name" name="S_pay_name" placeholder="输入转出账户" value="{{ application_d.S_pay_name }}">
+								</div>
+							</div>
+
+
+							<div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="S_acc_t">转出账户类型</label>
+								<div class="col-lg-6">
+									<select class="form-control" id="S_acc_t" name="S_acc_t">
+										<option value="公司账户" {% if application_d.S_pay_accounnt_type == "公司账户" %} selected {% endif %}>公司账户
+                                        </option>
+                                        <option value="私人账户" {% if application_d.S_pay_accounnt_type == "私人账户" %} selected {% endif %}>私人账户
+                                        </option>
+
+										</select>
+
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="account_suggest">会计部意见</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="account_suggest" name="account_suggest" placeholder="请会计部填写请款意见" value="{{ application_d.account_suggest }}" {% if groupname != "会计" %}readonly{% endif %}>
+								</div>
+							</div>
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="multiple_suggest">综合部意见</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="multiple_suggest" name="multiple_suggest" placeholder="请综合部填写请款意见" value="{{ application_d.multiple_suggest }}" {% if groupname != "综合" %}readonly{% endif %}>
+								</div>
+							</div>
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="audit_suggest">审计部意见</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="audit_suggest" name="audit_suggest" placeholder="请审计部填写请款意见" value="{{ application_d.audit_suggest }}" {% if groupname != "审计" %}readonly{% endif %}>
+								</div>
+							</div>
+                           <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="final_sum">批准金额</label>
+								<div class="col-lg-6">
+									<input type="number" class="form-control" id="final_sum" name="final_sum" placeholder="请总经理填写最终批准转账金额" value="{{ application_d.final_sum }}" {% if groupname != "总经理" %}readonly{% endif %}>
+								</div>
+							</div>
+                           <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="ceo_suggest">总经理意见</label>
+								<div class="col-lg-6">
+									<input type="text" class="form-control" id="ceo_suggest" name="ceo_suggest" placeholder="请总经理填写请款意见" value="{{ application_d.ceo_suggest }}" {% if groupname != "总经理" %}readonly{% endif %}>
+								</div>
+							</div>
+
+
+
+
+
+
+							<div class="form-group row">
+                                {% if groupname == "文员" or groupname == "会计" or groupname == "综合" or groupname == "审计" %}
+								<div class="col-auto">
+									<button type="submit" class="btn btn-info text-center" name="save" value="save">保存</button>
+								</div>
+                                {% endif %}
+                                {% if groupname == "总经理" %}
+								<div class="col-auto">
+									<button type="button" class="btn btn-info text-center" name="a_save" value="save" onclick="b_save();">保存</button>
+                                    <button type="button" class="btn btn-danger text-center" name="a_reject" value="reject" onclick="b_reject();">不批准</button>
+                                    <button type="button" class="btn btn-success text-center" name="a_approve" value="approve" onclick="b_approve();">批准</button>
+								</div>
+                                {% endif %}
+
+							</div>
+
+						</form>
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap-4.0.0.js"></script>
+<script type="text/javascript">
+
+function b_save(){
+    document.saveApplicationForm.action="http://chinashunlin.com:8001/applicationsave/";
+    document.saveApplicationForm.submit();
+}
+function b_reject(){
+    var message = confirm("确认不批准申请？");
+    if (message == true) {
+        document.saveApplicationForm.action = "http://chinashunlin.com:8001/applicationreject/";
+        document.saveApplicationForm.submit();
+    }
+    else {
+    }
+}
+function b_approve(){
+    var message = confirm("确认批准申请？");
+    if (message == true) {
+        document.saveApplicationForm.action = "http://chinashunlin.com:8001/applicationapprove/";
+        document.saveApplicationForm.submit();
+    }
+    else {
+    }
+}
+
+
+</script>
+
+</body>
+</html>
