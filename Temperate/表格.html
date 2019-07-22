@@ -74,11 +74,7 @@
 									<select class="form-control" id="subject" name="subject" >
                                         {% for name in namelist %}
 										<option value="{{ name }}">{{ name }}</option>
-
-
                                         {% endfor %}
-										
-										
 										</select>
 										<lgall>请选择工程项目</lgall>
 								</div>
@@ -106,7 +102,22 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="account">银行账号</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="account" name="account" placeholder="请输入银行账号" />
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="bankname">所在银行</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="bankname" name="bankname" placeholder="请输入收款方" />
+								</div>
+							</div>
+
+
+                            <div class="form-group row">
 								<label class="col-lg-4 col-form-label" for="accountstype">收款方账户类型</label>
 								<div class="col-lg-6">
 									<select class="form-control" id="accountstype" name="accountstype">

@@ -52,25 +52,23 @@
         <div class="card-header bg-danger">公司公告</div>
          <div class="card-body text-dark">
              <h5 class="card-title">关于顺林后台信息系统公告</h5>
-             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+             <p class="card-text">1、请务必区分<strong>项目名（工地名）</strong>，工地名在日后的分组和统计中有重要意义</p>
+
   </div>
 </div>
 
     <div class="card ">
         <div class="card-header bg-info text-white">工作指引</div>
         <ul class="list-group text-dark">
+
+            {% for i,j,k in landlist %}
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    Cras justo odio
-    <span class="badge badge-primary badge-pill">14</span>
+    <a href="{{ k }}" >{{ i }}</a>
+    <span class="badge badge-primary badge-pill">{{ j }}</span>
   </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    Dapibus ac facilisis in
-    <span class="badge badge-primary badge-pill">2</span>
-  </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    Morbi leo risus
-    <span class="badge badge-primary badge-pill">1</span>
-  </li>
+            {% endfor %}
+
+
 </ul>
 
   </div>
@@ -90,8 +88,8 @@
     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
           <p>1、在“我的事务”里选择构建不同的物料单，分绿化工地和非绿化工地。构建物料单时请<strong>认真</strong>填写,千万别在金额中填入英文</p>
-          <p>2、如果能提供发票，请确认你已勾选提供发票的选框。创立申请单时，收款方账号请及具体信息请填写在详细信息中</p>
-          <p>3、当有图片上传时，可多图上传，可以在预览框预览你已选择的图片，如果选择错误请点击“选择文件”按钮<strong>重新选择</strong>，图片将会在点击保存按钮后上传，<strong class="text-danger">请务必等待文件上传页面正常跳转再离开</strong></p>
+          <p>2、如果能提供发票，请确认你已<strong>勾选提供发票的选框</strong>。</p>
+          <p>3、当有图片上传时，可多图上传，可以在预览框预览你已选择的图片，如果选择错误请点击“选择文件”按钮<strong>重新选择</strong>，图片将会在点击保存按钮后上传，<strong class="text-danger">上传文件需要时间，请务必等待文件上传页面正常跳转再离开</strong></p>
           <p>4、你可以在物料单管理处修改自己的物料单，在申请查询中查看请款进度，当物料单提交申请后，你将不能修改该物料单</p>
       </div>
     </div>
@@ -108,6 +106,7 @@
       <div class="card-body">
           <p>1、如果要自己创建物料单，请查看采购引导</p>
           <p>2、你可以在管理物料单中，管理所有由各申请人提交的物料单，并在该物料单详细信息最下面，创立并提交申请单</p>
+          <p>3、在近阶段，将不提供数据删除功能，可以把错误的单修改成正确的单</p>
 
       </div>
     </div>
@@ -123,6 +122,7 @@
     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
       <div class="card-body">
           <p>1、在申请审核页面，将不能对物料单信息进行修改，如果需要修改请点击物料信息上面的连接，或联系文员修改</p>
+          <p>2、请留意同一个物料不同的申请单，系统将自动提醒该款项已转账的数额</p>
       </div>
     </div>
 
@@ -130,6 +130,32 @@
 </div>
 </div>
 
+</div>
+
+    <div class="card">
+        <div class="card-header bg-success text-white">监控中心</div>
+<div class="card-columns">
+            {% for subject in obl %}
+                <div class="card col-auto">
+                    <div class="card-header bg-info text-white"><a href="http://chinashunlin.com:8001/subjectctl/?subject={{ subject.name }}" class="text-white"> {{ subject.name }}</a></div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio subject.persum subject.sum 100 %}%" aria-valuenow="{% widthratio subject.persum subject.sum 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio subject.persum subject.sum 100 %}%</div>
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {% widthratio subject.realsum subject.sum 100 %}%" aria-valuenow="{% widthratio subject.realsum subject.sum 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio subject.realsum subject.sum 100 %}%</div>
+                    </div>
+                    <p >合同总额:{{ subject.sum }}</p>
+                    <p class="text-success">预付款项:{{ subject.persum }}</p>
+                    <p class="text-info">已付款项:{{ subject.realsum }}</p>
+
+                </div>
+
+
+            {% endfor %}
+</div>
+
+        </div>
+
+
+
 
 
 </div>
@@ -139,8 +165,7 @@
 
 
 
-</div>
-	
+
 
 
 

@@ -89,8 +89,6 @@
 
                                         {% endfor %}
 
-
-
 									</select>
 								</div>
 							</div>
@@ -98,16 +96,31 @@
 							<div class="form-group row">
 								<label class="col-lg-4 col-form-label" for="accountname">收款方</label>
 								<div class="col-lg-6">
-									<input class="form-control" id="accountname" name="accountname" placeholder="请输入收款方" value="{{ item_d.beneficiary_name }}" type="text"/>
+									<input class="form-control" id="accountname" name="accountname" placeholder="请输入收款方" value="{{ item_d.benefi_acc.accountname }}" type="text"/>
 								</div>
 							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="account">银行账号</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="account" name="account" placeholder="请输入银行账号" value="{{ item_d.benefi_acc.accountnumber }}" >
+								</div>
+							</div>
+
+                            <div class="form-group row">
+								<label class="col-lg-4 col-form-label" for="bankname">所在银行</label>
+								<div class="col-lg-6">
+									<input class="form-control" id="bankname" name="bankname" placeholder="请输入收款方" value="{{ item_d.benefi_acc.bankname }}"/>
+								</div>
+							</div>
+
 
 							<div class="form-group row">
 								<label class="col-lg-4 col-form-label" for="accountstype">收款方账户类型</label>
 								<div class="col-lg-6">
 									<select class="form-control" id="accountstype" name="accountstype">
-										<option value ="公司账户" {% if item_d.beneficiary_acc_t == "公司账户" %} selected {% endif %}>公司账户</option>
-										<option value ="私人账户" {% if item_d.beneficiary_acc_t == "私人账户" %} selected {% endif %}>私人账户</option>
+										<option value ="公司账户" {% if item_d.benefi_acc.accountstyle == "公司账户" %} selected {% endif %}>公司账户</option>
+										<option value ="私人账户" {% if item_d.benefi_acc.accountstyle == "私人账户" %} selected {% endif %}>私人账户</option>
 
 										</select>
 
@@ -139,10 +152,10 @@
 								<label for="image">上传照片</label>
 								<input type="file" class="form-control-file" id="image" name="image">
 							</div>
-                        	{% if item_d.photo %}
                             <p class="col-lg-2">物料图片:</p>
-                                <img src="/media/{{ item_d.photo }}" alt="图片加载中" class="col-lg-8 img-fluid rounded mx-auto d-block" multiple>
-							{% endif %}
+                        	{% for p in photo %}
+                                <img src="/media/{{ p.image }}" alt="图片加载中" class="col-lg-8 img-fluid rounded mx-auto d-block" multiple>
+							{% endfor %}
                             <h1> </h1>
 
 							<div class="form-group row">
@@ -193,6 +206,8 @@
 									<input type="text" class="form-control" id="S_account" name="S_account" placeholder="输入转出账户"value="">
 								</div>
 							</div>
+
+
 
 
 							<div class="form-group row">

@@ -135,27 +135,47 @@
                                 <div class="input-group mb-2">
 
                                     <input type="text" class="form-control" id="accountname" readonly name="accountname"
-                                           value="{{ application_d.itemID.beneficiary_name }}">
-
-
+                                           value="{{ application_d.itemID.benefi_acc.accountname }}">
                                 </div>
-
-
                             </div>
 
+                            <div class="col-auto">
+
+                                <label class="sr-only" for="accountnumber">银行账号</label>
+                                <div class="input-group mb-2">
+
+                                    <input type="text" class="form-control" id="accountnumber" readonly name="accountnumber"
+                                           value="{{ application_d.itemID.benefi_acc.accountnumber }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row align-items-center">
                             <div class="col-auto">
                                 <label class="sr-only" for="accountstype">收款方账户类型</label>
                                 <div class="input-group mb-2">
 
                                     <select  disabled class="form-control" id="accountstype" name="accountstype">
-                                        <option value="公司账户" {% if application_d.itemID.beneficiary_acc_t == "公司账户" %} selected {% endif %}>公司账户
+                                        <option value="公司账户" {% if application_d.itemID.benefi_acc.accountstype == "公司账户" %} selected {% endif %}>公司账户
                                         </option>
-                                        <option value="私人账户" {% if application_d.itemID.beneficiary_acc_t == "私人账户" %} selected {% endif %}>私人账户
+                                        <option value="私人账户" {% if application_d.itemID.benefi_acc.accountstype == "私人账户" %} selected {% endif %}>私人账户
                                         </option>
                                     </select>
 
                                 </div>
                             </div>
+
+                            <div class="col-auto">
+
+                                <label class="sr-only" for="bankname">银行</label>
+                                <div class="input-group mb-2">
+
+                                    <input type="text" class="form-control" id="bankname" readonly name="bankname"
+                                           value="{{ application_d.itemID.benefi_acc.bankname }}">
+                                </div>
+                            </div>
+
+
+
                             <div class="col-auto">
                                 <ul class="list-group mb-sm-2">
 
@@ -167,6 +187,7 @@
                                 </ul>
                             </div>
                         </div>
+
                         <div class="form-row align-items-center">
                             <div class="col-auto">
 
@@ -181,11 +202,11 @@
                     </form>
 
                     <div>
-                        {% if application_d.itemID.photo %}
+                        {% for p in photo %}
 
-                            <img src="/media/{{ application_d.itemID.photo }}" alt="图片加载中"
+                            <img src="/media/{{ p.image }}" alt="图片加载中"
                                  class="img-thumbnail col-lg-8 img-fluid rounded mx-auto d-block">
-                        {% endif %}
+                        {% endfor %}
 
 
                     </div>

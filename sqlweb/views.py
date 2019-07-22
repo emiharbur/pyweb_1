@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from .models import itemtable,application,subjecttable,itemimage
-from .subapp import baseinfo ,subjectnamelist,sortlist
+from .models import itemtable,application,subjecttable,itemimage,Bankaccount,paybill
+from .subapp import baseinfo ,subjectnamelist,sortlist,subjectctldetail
 
 @login_required(login_url='/login/')
 def index(request):
@@ -33,6 +33,9 @@ def logout_v(request):
 #采购操作
 import datetime
 from django.db.models import Max
+
+
+@login_required(login_url='/login/')
 def additem(request,sort):
     userinfo = baseinfo(request)
 
@@ -47,14 +50,20 @@ def additem(request,sort):
     user_l=request.user
     username = user_l.username
     forminfo={"id":itemid,"申请人":username}
+
+    sortl = sortlist(int(sort))
     namel=subjectnamelist(int(sort))
+
     userinfo.update(forminfo)
+
     userinfo.update({"namelist":namel})
-    sortl=sortlist(int(sort))
+
     userinfo.update({"sortlist":sortl})
 
     return render(request,"表格.html",userinfo)
 
+
+@login_required(login_url='/login/')
 def itemsave(request):
     userinfo = baseinfo(request)
 
@@ -66,11 +75,22 @@ def itemsave(request):
             item.proposer=request.POST.get("staff")
             item.sort= request.POST.get("classify")
             item.subject=subjecttable.objects.get(subjectshortname=request.POST.get("subject"))
-            item.beneficiary_name=request.POST.get("accountname")
-            item.beneficiary_acc_t=request.POST.get("accountstype")
+            if Bankaccount.objects.filter(accountnumber=request.POST.get('account')).count()==0:
+                bankacc = Bankaccount(accountnumber=request.POST.get('account'))
+                bankacc.accountname = request.POST.get("accountname")
+                bankacc.bankname = request.POST.get("bankname")
+                bankacc.accountstyle = request.POST.get("accountstype")
+                bankacc.save()
+            else:
+                bankacc=Bankaccount.objects.get(accountnumber=request.POST.get('account'))
+                bankacc.accountname = request.POST.get("accountname")
+                bankacc.bankname = request.POST.get("bankname")
+                bankacc.accountstyle = request.POST.get("accountstype")
+                bankacc.save()
+            item.benefi_acc=bankacc
             item.sum_m=float(request.POST.get("sum"))
             print(item.sum_m)
-            if int(request.POST.get('havebill')) ==1:
+            if request.POST.get('havebill') == '1':
                 item.haverbill=1
             else:
                 item.haverbill=0
@@ -97,11 +117,22 @@ def itemsave(request):
                 item.proposer = request.POST.get("staff")
                 item.sort = request.POST.get("classify")
                 item.subject = subjecttable.objects.get(subjectshortname=request.POST.get("subject"))
-                item.beneficiary_name = request.POST.get("accountname")
-                item.beneficiary_acc_t = request.POST.get("accountstype")
+                if Bankaccount.objects.filter(accountnumber=request.POST.get('account')).count() == 0:
+                    bankacc = Bankaccount(accountnumber=request.POST.get('account'))
+                    bankacc.accountname = request.POST.get("accountname")
+                    bankacc.bankname = request.POST.get("bankname")
+                    bankacc.accountstyle = request.POST.get("accountstype")
+                    bankacc.save()
+                else:
+                    bankacc = Bankaccount.objects.get(accountnumber=request.POST.get('account'))
+                    bankacc.accountname = request.POST.get("accountname")
+                    bankacc.bankname = request.POST.get("bankname")
+                    bankacc.accountstyle = request.POST.get("accountstype")
+                    bankacc.save()
+                item.benefi_acc=bankacc
                 item.sum_m = float(request.POST.get("sum"))
                 print(item.sum_m)
-                if int(request.POST.get('havebill')) == 1:
+                if request.POST.get('havebill') == '1':
                     item.haverbill = 1
                 else:
                     item.haverbill = 0
@@ -123,13 +154,20 @@ def itemsave(request):
                 userinfo.update({"result":res})
                 return render(request,"result.html",userinfo)
 
-
+@login_required(login_url='/login/')
 def item_v(request):
     userinfo = baseinfo(request)
 
     if userinfo["groupname"]=="采购":
         itemlist=itemtable.objects.filter(proposer=userinfo["username"]).filter(statment__in=["已保存","部分转账"])
-    elif userinfo["groupname"] in ["文员","项目经理","会计","综合","审计","总经理"]:
+
+    elif userinfo["groupname"]== "文员":
+        if userinfo["username"] == "李詠仪":
+            itemlist = itemtable.objects.filter(statment__in=["已保存","部分转账"]).filter(subject__lvhua__in=[0])
+        else:
+            itemlist = itemtable.objects.filter(statment__in=["已保存", "部分转账"]).filter(subject__lvhua__in=[1])
+
+    elif userinfo["groupname"] in ["项目经理","会计","综合","审计","总经理"]:
         itemlist = itemtable.objects.filter(statment__in=["已保存","部分转账"])
 
     else:
@@ -138,6 +176,9 @@ def item_v(request):
     userinfo.update({"itemlist":itemlist})
 
     return render(request,"item_v.html",userinfo)
+
+
+@login_required(login_url='/login/')
 def applicationsave(request):
     userinfo = baseinfo(request)
 
@@ -174,7 +215,7 @@ def applicationsave(request):
 
 
 
-
+@login_required(login_url='/login/')
 def item_detail(request,itemid):
     userinfo = baseinfo(request)
 
@@ -189,13 +230,18 @@ def item_detail(request,itemid):
     else:
         maxo=application.objects.aggregate(maxid=Max('applicationID'))
         applicationID=str(int(maxo["maxid"])+1)
-
-    namel=subjectnamelist(item_d.subject.lvhua)
-
+    if item_d.subject.subjectshortname== "管理费用" :
+        namel=subjectnamelist(2)
+        sortL=sortlist(2)
+    else:
+        namel=subjectnamelist(item_d.subject.lvhua)
+        sortL = sortlist(item_d.subject.lvhua)
+    photol=itemimage.objects.filter(item=item_d)
+    userinfo.update({"photo":photol})
     userinfo.update({"申请ID":applicationID})
     userinfo.update({"namelist":namel})
 
-    sortL = sortlist(item_d.subject.lvhua)
+
     userinfo.update({"sortlist":sortL})
     if item_d.statment == "部分转账":
         app_a = application.objects.filter(itemID=item_d)
@@ -211,7 +257,7 @@ def item_detail(request,itemid):
 
     return render(request,"物料编辑.html",userinfo)
 
-
+@login_required(login_url='/login/')
 def viewapplication(request):
     userinfo = baseinfo(request)
     if userinfo["groupname"]=="采购":
@@ -219,6 +265,15 @@ def viewapplication(request):
 
     elif request.GET.get('statment')== '3':
         application_D = application.objects.filter(statment="批准")
+
+    elif userinfo["groupname"] == "总经理":
+        if request.GET.get('ceo') == '3':
+            application_D=application.objects.filter(statment="审核中").exclude(account_suggest__exact="").exclude(audit_suggest__exact="")
+        elif request.GET.get('ceo') == 'anp' :
+            application_D=application.objects.filter(statment="批准")
+        else:
+            application_D = application.objects.filter(statment="审核中")
+
 
     else:
         application_D=application.objects.filter(statment="审核中")
@@ -229,15 +284,23 @@ def viewapplication(request):
 
     return render(request,"application_v.html",userinfo)
 
+
+@login_required(login_url='/login/')
 def application_detail(request,applicationid):
     userinfo = baseinfo(request)
 
 
     application_d=application.objects.get(applicationID=applicationid)
-    namel = subjectnamelist(application_d.itemID.subject.lvhua)
+    if application_d.itemID.subject.subjectshortname == "管理费用":
+        sortL=sortlist(2)
+        namel=subjectnamelist(2)
+    else:
+        sortL = sortlist(application_d.itemID.subject.lvhua)
+        namel = subjectnamelist(application_d.itemID.subject.lvhua)
     userinfo.update({"application_d":application_d})
     userinfo.update({"namelist":namel})
-    sortL = sortlist(application_d.itemID.subject.lvhua)
+    photol=itemimage.objects.filter(item__application=application_d)
+    userinfo.update({"photo":photol})
     userinfo.update({"sortlist": sortL})
 
     if application_d.itemID.statment == "部分转账":
@@ -246,7 +309,6 @@ def application_detail(request,applicationid):
         for app in app_a:
             sum = sum + app.final_sum
         dissum=application_d.itemID.sum_m-sum
-
         userinfo.update({"paysum":sum})
         userinfo.update({"dissum":dissum })
 
@@ -255,6 +317,9 @@ def application_detail(request,applicationid):
 
     return render(request,"applicationdetail.html",userinfo)
 
+
+
+@login_required(login_url='/login/')
 def applicationreject(request):
     userinfo = baseinfo(request)
     if request.method == "POST":
@@ -276,7 +341,7 @@ def applicationreject(request):
         userinfo.update({"result": "操作失败，错误操作或无权限操作"})
         return render(request, "result.html", userinfo)
 
-
+@login_required(login_url='/login/')
 def applicationapprove(request):
     userinfo = baseinfo(request)
     if request.method == "POST":
@@ -300,7 +365,7 @@ def applicationapprove(request):
 
 from .models import subjecttable
 
-
+@login_required(login_url='/login/')
 def subject_v(request):
     userinfo = baseinfo(request)
 
@@ -327,10 +392,15 @@ def subject_v(request):
 
     return  render(request,"subject_v.html",userinfo)
 from .subapp import excel
+
+@login_required(login_url='/login/')
 def addsubject(request):
+
     userinfo = baseinfo(request)
     return render(request,"subjectdetail.html",userinfo)
 
+
+@login_required(login_url='/login/')
 def subjectsave(request):
     userinfo = baseinfo(request)
     if request.method=="POST":
@@ -393,7 +463,7 @@ def subjectsave(request):
         return HttpResponse("请求不是post")
 
 
-
+@login_required(login_url='/login/')
 def subjectdetail(request,subjectid):
     userinfo = baseinfo(request)
     subject_a=subjecttable.objects.get(subjectID=subjectid)
@@ -401,7 +471,7 @@ def subjectdetail(request,subjectid):
 
     return render(request,"subjectdetail.html",userinfo)
 
-
+@login_required(login_url='/login/')
 def payview(request):
     userinfo=baseinfo(request)
 
@@ -416,6 +486,8 @@ def payview(request):
     userinfo.update({"application_d":application_D})
     return render(request,"pay_v.html",userinfo)
 
+
+@login_required(login_url='/login/')
 def paydetail(request,appid):
 
     userinfo = baseinfo(request)
@@ -426,12 +498,19 @@ def paydetail(request,appid):
 
 
 
-
+@login_required(login_url='/login/')
 def paycheck (request,appid):
     userinfo=baseinfo(request)
     application_d= application.objects.get(applicationID=appid)
     application_d.statment="已转账"
     application_d.save()
+
+    payment = paybill(applicationID=application_d)
+    payment.pay_name = application_d.S_pay_name
+    payment.pay_accounnt_type = application_d.S_pay_accounnt_type
+    payment.accountnunber = application_d.itemID.benefi_acc
+    payment.sum_m = application_d.final_sum
+    payment.save()
 
     app_a=application.objects.filter(itemID=application_d.itemID)
     sum = 0
@@ -450,7 +529,31 @@ def paycheck (request,appid):
     return render(request,'result.html',userinfo)
 
 
+def subjectctl(request):
+    userinfo = baseinfo(request)
+    if request.method == "GET":
+        dicttmp=subjectctldetail(request.GET.get("subject"))
+        maxsum = 0
+        for i,j,k in dicttmp:
+            z=j+k
+            if z>=maxsum:
+                maxsum=z
 
+
+        subject_d = subjecttable.objects.get(subjectshortname=request.GET.get("subject"))
+
+
+        userinfo.update({"sortL":dicttmp})
+        userinfo.update({"maxsum": maxsum})
+
+        userinfo.update({"subject_d":subject_d})
+
+        return render(request,"subjectctl.html",userinfo)
+
+
+
+
+    pass
 
 
 

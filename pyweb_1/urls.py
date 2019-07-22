@@ -40,6 +40,8 @@ urlpatterns = [
     path('payview/', sqlweb_view.payview),
     path('paydetail/<appid>', sqlweb_view.paydetail),
     path('paydetail/paycheck/<appid>', sqlweb_view.paycheck),
+    path('subjectctl/', sqlweb_view.subjectctl),
+
 
 
 

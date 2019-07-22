@@ -93,16 +93,22 @@ class subjecttable(models.Model):
 #以下是物料模板
 
 #物料表
+class Bankaccount(models.Model):
+    accountname = models.CharField(max_length=20)#账户名
+    bankname = models.CharField(max_length=25)#所属银行
+    subbankname = models.CharField(max_length=30)#所属支行
+    accountnumber = models.CharField(max_length=20,primary_key=True)#银行账号
+    company = models.CharField(max_length=30)#所属公司
+    accountstyle = models.CharField(max_length=10)#账户类型
+    detail = models.TextField(max_length=100)#备注
+
 
 class itemtable(models.Model):
     itemID = models.CharField(max_length=15,primary_key=True)#物料ID
     proposer = models.CharField(max_length=10)#申请人
     subject = models.ForeignKey(subjecttable,on_delete=models.CASCADE)#项目名
     sort = models.CharField(max_length=10)#分类
-    beneficiary_name = models.CharField(max_length=30)#收款方
-    beneficiary_acc = models.CharField(max_length=25,null=False,default="0000")
-    bank = models.CharField(max_length=30,null=True)
-    beneficiary_acc_t = models.CharField(max_length=4)#收款方账户类型
+    benefi_acc = models.ForeignKey(Bankaccount,on_delete=models.CASCADE)
     sum_m = models.DecimalField(decimal_places=3,max_digits=15)#金额
     haverbill = models.BooleanField(default=0)#是否提供发票
     detail = models.TextField(max_length=4000)#详细说明
@@ -129,20 +135,12 @@ class application(models.Model):
 
 #收款方信息表
 
-class Bankaccount(models.Model):
-    accountname = models.CharField(max_length=20)#账户名
-    bankname = models.CharField(max_length=25)#所属银行
-    subbankname = models.CharField(max_length=30)#所属支行
-    accountnumber = models.CharField(max_length=20,primary_key=True)#银行账号
-    company = models.CharField(max_length=30)#所属公司
-    accountstyle = models.CharField(max_length=10)#账户类型
-    detail = models.TextField(max_length=100)#备注
 
 
     
 class paybill(models.Model):
-    paybillID = models.CharField(max_length=15,primary_key=True)#转账ID
-    paytime = models.DateField()#转账时间
+    paybillID = models.AutoField(primary_key=True)#转账ID
+    paytime = models.DateTimeField(auto_now_add=True)#转账时间
     applicationID = models.ForeignKey(application,on_delete=models.CASCADE)#申请ID
     pay_name = models.CharField(max_length=30)#转出账户
     pay_accounnt_type = models.CharField(max_length=4)#转出账户类型

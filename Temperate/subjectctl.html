@@ -44,52 +44,27 @@
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span></button>
 </nav>
 
+    <h1 class="text-dark text-center">{{ subject_d.subjectshortname }}</h1>
+
+
+    <div class="card col-8 offset-2">
+        <div class="card-header bg-success text-white ">材料监控</div>
+
+            {% for i,j,k in sortL %}
+            <label for="{{ i }}">{{ i }}</label>
+                <div class="progress" id="{{ i }}">
+
+                <div class="progress-bar" role="progressbar" style="width: {% widthratio j maxsum 100 %}%" aria-valuenow="{% widthratio j maxsum 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio j 1 1.00 %}</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio k maxsum 100 %}%" aria-valuenow="{% widthratio k maxsum 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio k 1 1.00 %}</div>
+
+            </div>
 
 
 
-    <div class="card text-white col-lg-8 offset-lg-2" >
-        <div class="card-header bg-danger">转账信息</div>
-         <div class="card-body text-dark">
-             <h5 class="card-title table-info">简要</h5>
-             <p class="card-text">{{ application_d.itemID.subject.subjectshortname }}{{ application_d.itemID.sort }}款</p>
-             <h5 class="card-title table-info">金额</h5>
-             <p class="card-text">{{ application_d.final_sum }}</p>
-
-             <h5 class="card-title table-info">转出账户</h5>
-             <p class="card-text">{{ application_d.S_pay_name }}{{ application_d.S_pay_accounnt_type }}</p>
-
-             <h5 class="card-title table-info">收款方</h5>
-             <p class="card-text">{{ application_d.itemID.benefi_acc.accountname }}</p>
-             <p class="card-text">{{ application_d.itemID.benefi_acc.accountnumber }}</p>
-             <p class="card-text">{{ application_d.itemID.benefi_acc.bankname }}</p>
-             <p class="card-text">{{ application_d.itemID.benefi_acc.accountstyle }}</p>
-             <h5 class="card-title table-info">详细</h5>
-             <p class="card-text">{{ application_d.itemID.detail }}</p>
+            {% endfor %}
 
 
-             <form id="itemForm" method="POST" class=" " action="paycheck/{{ application_d.applicationID }}" enctype="multipart/form-data">
-                 {% csrf_token %}
-                 <div class="form-group row">
-								<label class="col-lg-4 col-form-label" for="accountsum">账户余额</label>
-								<div class="col-lg-6">
-									<input readonly type="text" class="form-control" id="accountsum" name="accountsum" placeholder="" value="">
-								</div>
-                 </div>
-                 <div class="form-group row">
-								<div class="col-lg-9 offset-lg-4">
-									<button type="submit" class="btn btn-primary" name="save" value="save">已转账</button>
-								</div>
-                 </div>
-             </form>
-
-
-
-
-
-
-
-
-  </div>
+        </div>
 
 
 
@@ -102,7 +77,6 @@
 
 
 
-</div>
 
 
 
